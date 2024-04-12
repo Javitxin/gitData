@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 const useGitHubUser = username => {
     const [user, setUser ] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() =>{
         const fetchGitHubUser = async () => {
@@ -14,7 +15,10 @@ const useGitHubUser = username => {
                 }
                 const userData = await response.json();
                 setUser(userData);
+                setError(null)
             } catch (error) {
+                setError(error.message);;
+            } finally{
                 setLoading(false);
             }
         };
@@ -22,6 +26,6 @@ const useGitHubUser = username => {
             fetchGitHubUser();
         }
     },[username]);
-    return {user, loading };
+    return {user, loading,error };
 };
 export default useGitHubUser;

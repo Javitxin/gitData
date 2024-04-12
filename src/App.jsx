@@ -1,20 +1,24 @@
 import React , {useEffect } from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import { setLoading, setUser } from './redux/userSlice';
+import { setLoading, setUser, setError } from './redux/userSlice';
 import useGitHubUser from './hooks/useGitHubUser';
 
 
 function UserProfile ({username}) {
   const dispatch =useDispatch();
-  const { user, loading } = useGitHubUser(username);
+  const { user, loading, error } = useGitHubUser(username);
 
   useEffect (() => {
     dispatch(setUser(user));
     dispatch(setLoading(loading));
-  }, [ dispatch, user, loading]);
+    dispatch(setError(error));
+  }, [ dispatch, user, loading, error]);
 
   if (loading) {
     return <div>Cargando</div>;
+  }
+  if (error){
+    return <div>Error: {error}</div>;
   }
   if(!user) {
     return null;
